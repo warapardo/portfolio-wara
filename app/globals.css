@@ -1,0 +1,117 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f4f4f4;
+  color: #333;
+  line-height: 1.6;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+body.dark {
+  background-color: #121212;
+  color: #f4f4f4;
+}
+
+h1, h2, h3 {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+a {
+  text-decoration: none;
+  color: #007bff;
+}
+
+.btn-cta, .btn-link {
+  display: inline-block;
+  background-color: #007bff;
+  color: #fff;
+  padding: 10px 20px;
+  border-radius: 5px;
+  margin: 10px 5px;
+  border: none;
+  cursor: pointer;
+}
+
+section {
+  padding: 60px 20px;
+}
+
+/* Seções claras/escuras alternadas */
+section:nth-child(odd) {
+  background-color: #fff;
+}
+
+body.dark section:nth-child(odd) {
+  background-color: #2d2d2d;
+}
+
+section:nth-child(even) {
+  background-color: #e9e9e9;
+}
+
+body.dark section:nth-child(even) {
+  background-color: #1a1a1a;
+}
+
+
+/* RESPONSIVIDADE */
+@media (max-width: 768px) {
+  /* Botão tema mobile */
+  button[onClick*="toggleTheme"] {
+    position: fixed !important;
+    top: 10px !important;
+    right: 10px !important;
+    width: 35px !important;
+    height: 35px !important;
+    z-index: 1000;
+  }
+  
+  /* Menu mobile */
+  header nav ul {
+    flex-wrap: wrap !important;
+    padding-top: 50px !important;
+    padding-right: 50px !important;
+    gap: 10px !important;
+  }
+  
+  header nav ul li {
+    margin: 0 5px !important;
+  }
+  
+  header nav ul li a {
+    font-size: 0.9em !important;
+  }
+  
+  /* Sobre Mim em coluna */
+  .about-content {
+    flex-direction: column !important;
+    align-items: center !important;
+    text-align: center !important;
+  }
+  
+  .about-content img {
+    width: 150px !important;
+    margin-bottom: 20px !important;
+  }
+  
+  /* Projetos em coluna */
+  .projects-grid {
+    grid-template-columns: 1fr !important;
+  }
+  
+  /* Contato em coluna */
+  .contact-links {
+    flex-direction: column;
+    align-items: center;
+  }
+}
