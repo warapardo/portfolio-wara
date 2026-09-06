@@ -1,13 +1,15 @@
 /** @type {import('next').NextConfig} */
 const isProd = process.env.NODE_ENV === 'production';
+const basePath = isProd ? '/portfolio-wara' : '';
 
 const nextConfig = {
   output: 'export',
-  // Se estiver em produção (GitHub), usa a subpasta. Se for local, usa a raiz.
-  basePath: isProd ? '/portfolio-wara' : '',
+  basePath: basePath,
   images: {
     unoptimized: true,
   },
 };
 
+// Exportar o basePath junto para poder usar nos códigos das páginas
+export { basePath };
 export default nextConfig;

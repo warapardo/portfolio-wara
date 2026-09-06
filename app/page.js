@@ -6,6 +6,21 @@ import "./globals.css";
 import PerfilAPI from "./components/PerfilAPI";
 import DadosAPI from "./components/DadosApi";
 
+// CONFIGURAÇÃO DO BASEPATH DINÂMICO
+const isProd = process.env.NODE_ENV === 'production';
+const basePath = isProd ? '/portfolio-wara' : '';
+
+// COMPONENTE PERSONALIZADO PARA CORRIGIR AS IMAGENS NO GITHUB
+function GithubImage({ src, alt, ...props }) {
+  return (
+    <Image 
+      src={`${basePath}${src}`} 
+      alt={alt} 
+      {...props} 
+    />
+  );
+}
+
 export default function Home() {
   // Estado para tema dark/light
   const [isDark, setIsDark] = useState(false);
@@ -121,7 +136,7 @@ export default function Home() {
       </header>
 
       {/* SEÇÃO SOBRE MIM */}
-      <section id="sobre" className="section">
+      <section id="sobre-mim" className="section"> {/* Corrigido id para bater com o menu */}
         <h2>Sobre Mim</h2>
         <div
           className="about-content"
@@ -133,13 +148,13 @@ export default function Home() {
             gap: "30px",
           }}
         >
-          <Image 
+          {/* USANDO O COMPONENTE CORRIGIDO */}
+          <GithubImage 
             src="/img/perfil.png"
             alt="Foto de Perfil"
             width={200}
             height={250}
             style={{
-              //width: "200px",
               borderRadius: "50%",
               flexShrink: "0",
             }}
@@ -212,54 +227,53 @@ export default function Home() {
         >
           {/* Projeto 1 */}
           <div className="project-card">
-  <Image
-    src="/img/epic_logo.jpg"
-    alt="EPIC (Energy Production Innovation Center)"
-    width={200}
-    height={200}
-    className="project-logo"
-  />
+            {/* USANDO O COMPONENTE CORRIGIDO */}
+            <GithubImage
+              src="/img/epic_logo.jpg"
+              alt="EPIC (Energy Production Innovation Center)"
+              width={200}
+              height={200}
+              className="project-logo"
+            />
 
-  <div className="project-content">
-    <h3>EPIC (Energy Production Innovation Center)</h3>
+            <div className="project-content">
+              <h3>EPIC (Energy Production Innovation Center)</h3>
 
-    <p>
-      Desenvolvimento e manutenção de tema WordPress customizado para o
-      EPIC/Unicamp, com implementação de filtros interativos, buscador com
-      dropdown dinâmico via REST API e soluções para limitações de plugins
-      usando JavaScript e PHP.
-    </p>
+              <p>
+                Desenvolvimento e manutenção de tema WordPress customizado para o
+                EPIC/Unicamp, com implementação de filtros interativos, buscador com
+                dropdown dinâmico via REST API e soluções para limitações de plugins
+                usando JavaScript e PHP.
+              </p>
 
-    <div className="project-technologies">
-      {["HTML", "CSS", "JavaScript", "PHP"].map((tech) => (
-        <span key={tech}>{tech}</span>
-      ))}
-    </div>
+              <div className="project-technologies">
+                {["HTML", "CSS", "JavaScript", "PHP"].map((tech) => (
+                  <span key={tech}>{tech}</span>
+                ))}
+              </div>
 
-    <div className="project-links">
-      <a
-        href="https://epicenergy.org.br/"
-        target="_blank"
-        rel="noopener noreferrer"
-        className="btn-link"
-      >
-        Ver Projeto
-      </a>
+              <div className="project-links">
+                <a
+                  href="https://epicenergy.org.br/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="btn-link"
+                >
+                  Ver Projeto
+                </a>
 
-      <a
-        href="#"
-        target="_blank"
-        rel="noopener noreferrer"
-        className="btn-link"
-      >
-        Ver Código (GitHub)
-      </a>
-    </div>
-  </div>
-</div>
-
-
-          {/* Adicione mais projetos seguindo o mesmo padrão */}
+                <a
+                  href="#"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="btn-link"
+                >
+                  Ver Código (GitHub)
+                </a>
+              </div>
+            </div>
+          </div>
+          {/* Adicionar mais projetos seguindo o mesmo padrão */}
         </div>
       </section>
 
@@ -270,96 +284,7 @@ export default function Home() {
           Estou em busca da minha primeira oportunidade e adoraria conversar
           sobre como posso contribuir para sua equipe.
         </p>
-
-        <div
-          className="contact-links"
-          style={{
-            display: "flex",
-            justifyContent: "center",
-            flexWrap: "wrap",
-            gap: "20px",
-            marginBottom: "30px",
-          }}
-        >
-          <a
-            href="https://mail.google.com/mail/?view=cm&fs=1&to=waarapardo@gmail.com"
-            target="_blank"
-            className="btn-link"
-          >
-            Enviar Email (via Gmail)
-          </a>
-          <a
-            href="https://www.linkedin.com/in/wara-inti-pardo-51407111a/"
-            target="_blank"
-            className="btn-link"
-          >
-            LinkedIn
-          </a>
-          <a
-            href="https://github.com/warapardo"
-            target="_blank"
-            className="btn-link"
-          >
-            GitHub
-          </a>
-        </div>
-
-        <p>
-          Se preferir, meu e-mail é: <strong>waarapardo@gmail.com</strong>
-        </p>
       </section>
-
-      {/* FOOTER */}
-      <footer
-        style={{
-          textAlign: "center",
-          padding: "20px",
-          backgroundColor: "#333",
-          color: "#fff",
-        }}
-      >
-        <p>
-          &copy; {new Date().getFullYear()} Wara Inti Pardo. Todos os direitos
-          reservados.
-        </p>
-
-        {/* ↓↓↓ ADICIONE ESTE BLOCO DENTRO DO FOOTER ↓↓↓ */}
-        {dadosAPI && (
-          <div
-            style={{
-              marginTop: "10px",
-              fontSize: "0.8em",
-              opacity: 0.8,
-            }}
-          >
-            <p>
-              <strong>🎯 Backend Integrado:</strong> Dados servidos por API
-              Spring Boot 4.0 + Java 25
-            </p>
-            <div style={{ marginTop: "5px" }}>
-              <a
-                href="http://localhost:8080/api/api/v1/perfil"
-                target="_blank"
-                rel="noopener noreferrer"
-                style={{ color: "#4dabf7", margin: "0 10px" }}
-              >
-                🔗 Ver API (JSON)
-              </a>
-              <a
-                href="http://localhost:8080/api/api/v1/health"
-                target="_blank"
-                rel="noopener noreferrer"
-                style={{ color: "#4dabf7", margin: "0 10px" }}
-              >
-                📊 Status da API
-              </a>
-            </div>
-          </div>
-        )}
-      </footer>
-
-      {dadosAPI && <PerfilAPI />}
-      {dadosAPI && <DadosAPI />}
     </>
   );
 }
