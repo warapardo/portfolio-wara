@@ -1,6 +1,10 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  /* config options here */
+  output: 'export',
+  basePath: '/portfolio-wara',
+  images: {
+    unoptimized: true, // Necessário para o GitHub Pages aceitar imagens do Next.js
+  },
 };
 
 export default nextConfig;
