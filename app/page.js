@@ -133,11 +133,13 @@ export default function Home() {
             gap: "30px",
           }}
         >
-          <img
+          <Image 
             src="/img/perfil.png"
             alt="Foto de Perfil"
+            width={200}
+            height={250}
             style={{
-              width: "200px",
+              //width: "200px",
               borderRadius: "50%",
               flexShrink: "0",
             }}
@@ -210,9 +212,11 @@ export default function Home() {
         >
           {/* Projeto 1 */}
           <div className="project-card">
-  <img
+  <Image
     src="/img/epic_logo.jpg"
     alt="EPIC (Energy Production Innovation Center)"
+    width={200}
+    height={200}
     className="project-logo"
   />
 
