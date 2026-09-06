@@ -209,59 +209,51 @@ export default function Home() {
           }}
         >
           {/* Projeto 1 */}
-          <div
-            className="project-card"
-            style={{
-              backgroundColor: "#f9f9f9",
-              borderRadius: "8px",
-              overflow: "hidden",
-              textAlign: "left",
-            }}
-          >
-            <img
-              src="https://via.placeholder.com/300x200"
-              alt="Projeto 1"
-              style={{ width: "100%", height: "200px", objectFit: "cover" }}
-            />
-            <div style={{ padding: "20px" }}>
-              <h3>Nome do Projeto 1</h3>
-              <p style={{ margin: "10px 0" }}>
-                Uma breve descrição do que este projeto faz e quais problemas
-                ele resolve.
-              </p>
-              <div style={{ margin: "15px 0" }}>
-                {["HTML", "CSS", "JavaScript"].map((tech) => (
-                  <span
-                    key={tech}
-                    style={{
-                      backgroundColor: "#e0e0e0",
-                      padding: "5px 10px",
-                      borderRadius: "3px",
-                      fontSize: "0.8em",
-                      marginRight: "5px",
-                      display: "inline-block",
-                      marginBottom: "5px",
-                    }}
-                  >
-                    {tech}
-                  </span>
-                ))}
-              </div>
-              <div className="project-links">
-                <a
-                  href="#"
-                  target="_blank"
-                  className="btn-link"
-                  style={{ marginRight: "10px" }}
-                >
-                  Ver Projeto
-                </a>
-                <a href="#" target="_blank" className="btn-link">
-                  Ver Código (GitHub)
-                </a>
-              </div>
-            </div>
-          </div>
+          <div className="project-card">
+  <img
+    src="/img/epic_logo.jpg"
+    alt="EPIC (Energy Production Innovation Center)"
+    className="project-logo"
+  />
+
+  <div className="project-content">
+    <h3>EPIC (Energy Production Innovation Center)</h3>
+
+    <p>
+      Desenvolvimento e manutenção de tema WordPress customizado para o
+      EPIC/Unicamp, com implementação de filtros interativos, buscador com
+      dropdown dinâmico via REST API e soluções para limitações de plugins
+      usando JavaScript e PHP.
+    </p>
+
+    <div className="project-technologies">
+      {["HTML", "CSS", "JavaScript", "PHP"].map((tech) => (
+        <span key={tech}>{tech}</span>
+      ))}
+    </div>
+
+    <div className="project-links">
+      <a
+        href="https://epicenergy.org.br/"
+        target="_blank"
+        rel="noopener noreferrer"
+        className="btn-link"
+      >
+        Ver Projeto
+      </a>
+
+      <a
+        href="#"
+        target="_blank"
+        rel="noopener noreferrer"
+        className="btn-link"
+      >
+        Ver Código (GitHub)
+      </a>
+    </div>
+  </div>
+</div>
+
 
           {/* Adicione mais projetos seguindo o mesmo padrão */}
         </div>
@@ -362,7 +354,6 @@ export default function Home() {
         )}
       </footer>
 
-      {/* ↓↓↓ ADICIONE ESTAS LINHAS NO FINAL (antes do último </>) ↓↓↓ */}
       {dadosAPI && <PerfilAPI />}
       {dadosAPI && <DadosAPI />}
     </>
