@@ -6,7 +6,7 @@ export default function DadosAPI() {
     const [apiData, setApiData] = useState(null);
 
     useEffect(() => {
-        fetch('http://localhost:8080/api/api/v1/perfil')
+        fetch('http://localhost:8080/api/v1/perfil')
             .then(res => res.json())
             .then(data => setApiData(data))
             .catch(err => console.log('API em modo de desenvolvimento'));

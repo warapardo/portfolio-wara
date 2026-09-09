@@ -41,9 +41,9 @@ export default function Home() {
     }
   }, []);
 
-  // Efeito para buscar dados da API
+  // Efeito para buscar dados da API - URL CORRIGIDA PARA O NOVO PADRÃO
   useEffect(() => {
-    fetch("http://localhost:8080/api/api/v1/perfil")
+    fetch("http://localhost:8080/api/v1/perfil")
       .then((res) => {
         if (!res.ok) throw new Error("API não disponível");
         return res.json();
@@ -56,6 +56,12 @@ export default function Home() {
         console.log("ℹ️ Usando dados estáticos:", err.message);
       });
   }, []);
+
+  // Variáveis auxiliares para alternar entre os dados da API e o plano de fundo estático (fallback)
+  const nomeExibido = dadosAPI ? dadosAPI.nome : "Wara Pardo";
+  const profissaoExibida = dadosAPI ? dadosAPI.profissao : "Desenvolvedor Full Stack em formação pela UNICAMP";
+  const sobreExibido = dadosAPI ? dadosAPI.sobre : "Sou um entusiasta da tecnologia e do desenvolvimento web...";
+  const habilidadesExibidas = dadosAPI ? dadosAPI.habilidades : ["Fullstack", "Python", "Java", "AWS", "Linux", "Git & GitHub"];
 
   return (
     <>
@@ -108,9 +114,11 @@ export default function Home() {
           className="hero-content"
           style={{ textAlign: "center", padding: "40px 20px" }}
         >
+          {/* DINÂMICO: Nome vindo do Java */}
           <h1 style={{ fontSize: "2.5em", marginBottom: "20px" }}>
-            Olá, eu sou Wara
+            Olá, eu sou {nomeExibido}
           </h1>
+          {/* DINÂMICO: Profissão vinda do Java */}
           <p
             style={{
               fontSize: "1.2em",
@@ -118,8 +126,7 @@ export default function Home() {
               margin: "0 auto 30px",
             }}
           >
-            Desenvolvedor Full Stack em formação pela UNICAMP, focado em criar
-            soluções web eficientes e escaláveis.
+            {profissaoExibida}
           </p>
           <a href="#projetos" className="btn-cta">
             Ver Meus Projetos
@@ -146,27 +153,13 @@ export default function Home() {
             width={200}
             height={250}
             style={{
-              //width: "200px",
               borderRadius: "50%",
               flexShrink: "0",
             }}
           />
           <div>
-            <p>
-              Sou um entusiasta da tecnologia e do desenvolvimento web,
-              atualmente focado em aprimorar minhas habilidades no front e
-              back-end. Minha jornada no mundo da programação começou com a
-              curiosidade de entender como as páginas que usamos diariamente são
-              construídas, e rapidamente se transformou em uma paixão por
-              resolver problemas e dar vida a ideias através do código.
-            </p>
-            <p style={{ marginTop: "15px" }}>
-              Busco minha primeira oportunidade para aplicar meus conhecimentos
-              em um ambiente colaborativo, contribuir para projetos
-              significativos e continuar aprendendo e crescendo como
-              desenvolvedor. Estou sempre em busca de novos desafios e adoro
-              transformar conceitos em interfaces funcionais e intuitivas.
-            </p>
+            {/* DINÂMICO: Texto Sobre Mim vindo do Java */}
+            <p>{sobreExibido}</p>
           </div>
         </div>
       </section>
@@ -185,7 +178,8 @@ export default function Home() {
             margin: "auto",
           }}
         >
-          {["Fullstack", "Python", "Java", "AWS", "Linux", "Git & GitHub"].map(
+          {/* DINÂMICO: Renderiza a lista de habilidades cadastrada no backend */}
+          {habilidadesExibidas.map(
             (skill) => (
               <div
                 key={skill}
@@ -203,6 +197,7 @@ export default function Home() {
           )}
         </div>
       </section>
+
 
       {/* SEÇÃO PROJETOS */}
       <section id="projetos" className="section">
