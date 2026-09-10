@@ -8,7 +8,7 @@ export default function PerfilAPI() {
     const [error, setError] = useState(null);
 
     // URL do Spring Boot
-    const API_URL = 'http://localhost:8080/api/api/v1/perfil';
+    const API_URL = 'http://localhost:8080/api/v1/perfil';
 
     useEffect(() => {
         async function fetchPerfil() {

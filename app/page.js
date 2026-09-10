@@ -199,7 +199,7 @@ export default function Home() {
       </section>
 
 
-      {/* SEÇÃO PROJETOS */}
+            {/* SEÇÃO PROJETOS */}
       <section id="projetos" className="section">
         <h2>Meus Projetos</h2>
         <div
@@ -212,56 +212,72 @@ export default function Home() {
             margin: "auto",
           }}
         >
-          {/* Projeto 1 */}
-          <div className="project-card">
-  <GithubImage
-    src="/img/epic_logo.jpg"
-    alt="EPIC (Energy Production Innovation Center)"
-    width={200}
-    height={200}
-    className="project-logo"
-  />
+          {/* DINÂMICO: Renderiza a lista de projetos vinda da API */}
+          {dadosAPI && dadosAPI.projetos ? (
+            dadosAPI.projetos.map((projeto) => (
+              <div key={projeto.nome} className="project-card">
+                {/* Lógica para definir a imagem com base no nome do projeto */}
+                <GithubImage
+                  src={projeto.imagem ? projeto.imagem : "/img/epic_logo.jpg"} // Lê a imagem vinda da API
+                  alt={projeto.nome}
+                  width={200}
+                  height={200}
+                  className="project-logo"
+                />
 
-  <div className="project-content">
-    <h3>EPIC (Energy Production Innovation Center)</h3>
+                <div className="project-content">
+                  <h3>{projeto.nome}</h3>
+                  <p>{projeto.descricao}</p>
 
-    <p>
-      Desenvolvimento e manutenção de tema WordPress customizado para o
-      EPIC/Unicamp, com implementação de filtros interativos, buscador com
-      dropdown dinâmico via REST API e soluções para limitações de plugins
-      usando JavaScript e PHP.
-    </p>
+                  {/* SUB-LOOP DINÂMICO: Lista de tecnologias do projeto */}
+                  <div className="project-technologies">
+                    {projeto.tecnologias && projeto.tecnologias.map((tech) => (
+                      <span key={tech}>{tech}</span>
+                    ))}
+                  </div>
 
-    <div className="project-technologies">
-      {["HTML", "CSS", "JavaScript", "PHP"].map((tech) => (
-        <span key={tech}>{tech}</span>
-      ))}
-    </div>
-
-    <div className="project-links">
-      <a
-        href="https://epicenergy.org.br/"
-        target="_blank"
-        rel="noopener noreferrer"
-        className="btn-link"
-      >
-        Ver Projeto
-      </a>
-
-      <a
-        href="#"
-        target="_blank"
-        rel="noopener noreferrer"
-        className="btn-link"
-      >
-        Ver Código (GitHub)
-      </a>
-    </div>
-  </div>
-</div>
-
-
-          {/* Adicionar mais projetos seguindo o mesmo padrão */}
+                  <div className="project-links">
+                    <a
+                      href={projeto.link}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="btn-link"
+                    >
+                      {projeto.nome.includes("EPIC") ? "Ver Projeto" : "Ver Código (GitHub)"}
+                    </a>
+                  </div>
+                </div>
+              </div>
+            ))
+          ) : (
+            /* FALLBACK: Mostra o projeto estático se a API estiver fora do ar */
+            <div className="project-card">
+              <GithubImage
+                src="/img/epic_logo.jpg"
+                alt="EPIC (Energy Production Innovation Center)"
+                width={200}
+                height={200}
+                className="project-logo"
+              />
+              <div className="project-content">
+                <h3>EPIC (Energy Production Innovation Center)</h3>
+                <p>
+                  Desenvolvimento e manutenção de tema WordPress customizado para o
+                  EPIC/Unicamp, com implementação de filtros interativos...
+                </p>
+                <div className="project-technologies">
+                  {["HTML", "CSS", "JavaScript", "PHP"].map((tech) => (
+                    <span key={tech}>{tech}</span>
+                  ))}
+                </div>
+                <div className="project-links">
+                  <a href="https://epicenergy.org.br" target="_blank" rel="noopener noreferrer" className="btn-link">
+                    Ver Projeto
+                  </a>
+                </div>
+              </div>
+            </div>
+          )}
         </div>
       </section>
 
@@ -284,21 +300,21 @@ export default function Home() {
           }}
         >
           <a
-            href="https://mail.google.com/mail/?view=cm&fs=1&to=waarapardo@gmail.com"
+            href={`https://google.com{dadosAPI ? dadosAPI.email : "waarapardo@gmail.com"}`}
             target="_blank"
             className="btn-link"
           >
             Enviar Email (via Gmail)
           </a>
           <a
-            href="https://www.linkedin.com/in/wara-inti-pardo-51407111a/"
+            href={dadosAPI && dadosAPI.redesSociais ? dadosAPI.redesSociais.linkedin : "https://linkedin.com"}
             target="_blank"
             className="btn-link"
           >
             LinkedIn
           </a>
           <a
-            href="https://github.com/warapardo"
+            href={dadosAPI && dadosAPI.redesSociais ? dadosAPI.redesSociais.github : "https://github.com"}
             target="_blank"
             className="btn-link"
           >
@@ -307,7 +323,7 @@ export default function Home() {
         </div>
 
         <p>
-          Se preferir, meu e-mail é: <strong>waarapardo@gmail.com</strong>
+          Se preferir, meu e-mail é: <strong>{dadosAPI ? dadosAPI.email : "waarapardo@gmail.com"}</strong>
         </p>
       </section>
 
@@ -321,7 +337,7 @@ export default function Home() {
         }}
       >
         <p>
-          &copy; {new Date().getFullYear()} Wara Inti Pardo. Todos os direitos
+          &copy; {new Date().getFullYear()} {dadosAPI ? dadosAPI.nome : "Wara Inti Pardo"}. Todos os direitos
           reservados.
         </p>
 
@@ -339,7 +355,7 @@ export default function Home() {
             </p>
             <div style={{ marginTop: "5px" }}>
               <a
-                href="http://localhost:8080/api/api/v1/perfil"
+                href="http://localhost:8080/api/v1/perfil"
                 target="_blank"
                 rel="noopener noreferrer"
                 style={{ color: "#4dabf7", margin: "0 10px" }}
@@ -347,7 +363,7 @@ export default function Home() {
                 🔗 Ver API (JSON)
               </a>
               <a
-                href="http://localhost:8080/api/api/v1/health"
+                href="http://localhost:8080/api/v1/health"
                 target="_blank"
                 rel="noopener noreferrer"
                 style={{ color: "#4dabf7", margin: "0 10px" }}
