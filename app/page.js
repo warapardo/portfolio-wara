@@ -9,6 +9,11 @@ import DadosAPI from "./components/DadosApi";
 const isProd = process.env.NODE_ENV === 'production';
 const basePath = isProd ? '/portfolio-wara' : '';
 
+// NOVO: Define automaticamente o endereço da API com base no ambiente
+const API_BASE_URL = isProd 
+  ? 'https://portfolio-backend-6v4z.onrender.com/api/v1' 
+  : 'http://localhost:8080/api/v1';
+
 function GithubImage({ src, alt, ...props }) {
   return <Image src={`${basePath}${src}`} alt={alt} {...props} />;
 }
@@ -32,14 +37,22 @@ export default function Home() {
     }
   };
 
-  // Efeito para carregar tema salvo
+  // Efeito para buscar dados da API - AGORA TOTALMENTE DINÂMICO
   useEffect(() => {
-    const savedTheme = localStorage.getItem("theme");
-    if (savedTheme === "dark") {
-      setIsDark(true);
-      document.body.classList.add("dark");
-    }
+    fetch(`${API_BASE_URL}/perfil`) // Usa a variável dinâmica aqui
+      .then((res) => {
+        if (!res.ok) throw new Error("API não disponível");
+        return res.json();
+      })
+      .then((data) => {
+        console.log("✅ Dados da API carregados:", data);
+        setDadosAPI(data);
+      })
+      .catch((err) => {
+        console.log("ℹ️ Usando dados estáticos:", err.message);
+      });
   }, []);
+
 
   // Effect para buscar dados da API
   useEffect(() => {
