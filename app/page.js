@@ -41,7 +41,7 @@ export default function Home() {
     }
   }, []);
 
-  // Efeito para buscar dados da API - URL CORRIGIDA PARA O NOVO PADRÃO
+  // Effect para buscar dados da API
   useEffect(() => {
     fetch("http://localhost:8080/api/v1/perfil")
       .then((res) => {
@@ -57,7 +57,7 @@ export default function Home() {
       });
   }, []);
 
-  // Variáveis auxiliares para alternar entre os dados da API e o plano de fundo estático (fallback)
+  //fallback
   const nomeExibido = dadosAPI ? dadosAPI.nome : "Wara Pardo";
   const profissaoExibida = dadosAPI ? dadosAPI.profissao : "Desenvolvedor Full Stack em formação pela UNICAMP";
   const sobreExibido = dadosAPI ? dadosAPI.sobre : "Sou um entusiasta da tecnologia e desenvolvedor Java Full Stack em formação pela UNICAMP, focado em criar soluções web eficientes, escaláveis e alinhadas com as melhores práticas de mercado. Minha paixão pela programação nasceu da curiosidade de entender a engenharia por trás das aplicações cotidianas, transformando-se rapidamente em um compromisso com a resolução de problemas complexos por meio do código.Atualmente, possuo experiência prática no desenvolvimento e manutenção de sistemas, com destaque para a minha atuação no EPIC (Energy Production Innovation Center) na UNICAMP, onde implementei temas customizados, filtros interativos e consumo de APIs REST utilizando JavaScript e PHP. No ecossistema de backend, dedico meus estudos à arquitetura de software e construção de APIs robustas com Java 25 e Spring Boot 4.0.Estou em busca da minha primeira oportunidade profissional para integrar uma equipe colaborativa, onde eu possa aplicar de forma sólida meus conhecimentos em front e back-end, contribuir para projetos de impacto e continuar evoluindo continuamente como desenvolvedor.";

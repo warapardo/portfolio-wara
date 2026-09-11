@@ -34,7 +34,7 @@ export default function PerfilAPI() {
 
     // Se loading ou erro, retorna fallback discreto
     if (loading || error) {
-        return null; // Não mostra nada, mantém seus dados estáticos
+        return null; // Não mostra nada, mantém os dados estáticos
     }
 
     // Componente invisível - só para demonstrar que API está funcionando
