@@ -368,7 +368,7 @@ export default function Home() {
             </p>
             <div style={{ marginTop: "5px" }}>
               <a
-                href="http://localhost:8080/api/v1/perfil"
+                href={`${API_BASE_URL}/perfil`} // Dinâmico: vai para o Render em produção
                 target="_blank"
                 rel="noopener noreferrer"
                 style={{ color: "#4dabf7", margin: "0 10px" }}
@@ -376,7 +376,7 @@ export default function Home() {
                 🔗 Ver API (JSON)
               </a>
               <a
-                href="http://localhost:8080/api/v1/health"
+                href={`${API_BASE_URL}/health`} // Dinâmico: vai para o Render em produção
                 target="_blank"
                 rel="noopener noreferrer"
                 style={{ color: "#4dabf7", margin: "0 10px" }}
