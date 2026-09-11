@@ -93,7 +93,7 @@ a.secondary {
   border-color: var(--button-secondary-border);
 }
 
-/* Enable hover only on non-touch devices */
+/* Ativar o efeito ao passar o mouse apenas em dispositivos sem tela sensível ao toque */
 @media (hover: hover) and (pointer: fine) {
   a.primary:hover {
     background: var(--button-primary-hover);
