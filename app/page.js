@@ -9,7 +9,7 @@ import DadosAPI from "./components/DadosApi";
 const isProd = process.env.NODE_ENV === 'production';
 const basePath = isProd ? '/portfolio-wara' : '';
 
-// NOVO: Define automaticamente o endereço da API com base no ambiente
+// Define automaticamente o endereço da API com base no ambiente
 const API_BASE_URL = isProd 
   ? 'https://portfolio-backend-6v4z.onrender.com/api/v1' 
   : 'http://localhost:8080/api/v1';
@@ -22,6 +22,11 @@ export default function Home() {
   // Estado para tema dark/light
   const [isDark, setIsDark] = useState(false);
   const [dadosAPI, setDadosAPI] = useState(null); // Para API Spring Boot
+
+  // ESTADOS PARA O TRATAMENTO DE HIBERNAÇÃO / INDISPONIBILIDADE DO BACKEND
+  const [isServidorAcordando, setIsServidorAcordando] = useState(false);
+  const [tempoRestante, setTempoRestante] = useState(60);
+  const [tentativa, setTentativa] = useState(1);
 
   // Função para alternar tema
   const toggleTheme = () => {
@@ -37,40 +42,52 @@ export default function Home() {
     }
   };
 
-  // Efeito para buscar dados da API - AGORA TOTALMENTE DINÂMICO
+  // Efeito para buscar dados da API com limite de tempo e tratamento de falha
   useEffect(() => {
-    fetch(`${API_BASE_URL}/perfil`) // Usa a variável dinâmica aqui
+    const controller = new AbortController();
+    // Limite de 8s para abortar a requisição caso o servidor demore a responder
+    const timeoutId = setTimeout(() => controller.abort(), 8000);
+
+    fetch(`${API_BASE_URL}/perfil`, { signal: controller.signal })
       .then((res) => {
-        if (!res.ok) throw new Error("API não disponível");
+        clearTimeout(timeoutId);
+        if (!res.ok) throw new Error("API não disponível no momento");
         return res.json();
       })
       .then((data) => {
         console.log("✅ Dados da API carregados:", data);
         setDadosAPI(data);
+        setIsServidorAcordando(false);
       })
       .catch((err) => {
-        console.log("ℹ️ Usando dados estáticos:", err.message);
+        clearTimeout(timeoutId);
+        console.log("ℹ️ Backend indisponível no momento. Ativando cronômetro:", err.message);
+
+        // Ativa o aviso e o cronômetro (Funciona em DEV e PROD)
+        setIsServidorAcordando(true);
+        setTempoRestante(60);
       });
-  }, []);
 
+    return () => clearTimeout(timeoutId);
+  }, [tentativa]);
 
-  // Effect para buscar dados da API
+  // Efeito para gerenciar o Cronômetro Regressivo de 60s
   useEffect(() => {
-    fetch("http://localhost:8080/api/v1/perfil")
-      .then((res) => {
-        if (!res.ok) throw new Error("API não disponível");
-        return res.json();
-      })
-      .then((data) => {
-        console.log("✅ Dados da API carregados:", data);
-        setDadosAPI(data);
-      })
-      .catch((err) => {
-        console.log("ℹ️ Usando dados estáticos:", err.message);
-      });
-  }, []);
+    let timer;
 
-  //fallback
+    if (isServidorAcordando && tempoRestante > 0) {
+      timer = setInterval(() => {
+        setTempoRestante((prev) => prev - 1);
+      }, 1000);
+    } else if (isServidorAcordando && tempoRestante === 0) {
+      // Quando o tempo zera, força uma nova tentativa automática de conexão
+      setTentativa((prev) => prev + 1);
+    }
+
+    return () => clearInterval(timer);
+  }, [isServidorAcordando, tempoRestante]);
+
+  // Fallbacks estáticos
   const nomeExibido = dadosAPI ? dadosAPI.nome : "Wara Pardo";
   const profissaoExibida = dadosAPI ? dadosAPI.profissao : "Desenvolvedor Full Stack em formação pela UNICAMP";
   const sobreExibido = dadosAPI ? dadosAPI.sobre : "Sou um entusiasta da tecnologia e desenvolvedor Java Full Stack em formação pela UNICAMP, focado em criar soluções web eficientes, escaláveis e alinhadas com as melhores práticas de mercado. Minha paixão pela programação nasceu da curiosidade de entender a engenharia por trás das aplicações cotidianas, transformando-se rapidamente em um compromisso com a resolução de problemas complexos por meio do código.Atualmente, possuo experiência prática no desenvolvimento e manutenção de sistemas, com destaque para a minha atuação no EPIC (Energy Production Innovation Center) na UNICAMP, onde implementei temas customizados, filtros interativos e consumo de APIs REST utilizando JavaScript e PHP. No ecossistema de backend, dedico meus estudos à arquitetura de software e construção de APIs robustas com Java 25 e Spring Boot 4.0.Estou em busca da minha primeira oportunidade profissional para integrar uma equipe colaborativa, onde eu possa aplicar de forma sólida meus conhecimentos em front e back-end, contribuir para projetos de impacto e continuar evoluindo continuamente como desenvolvedor.";
@@ -122,6 +139,53 @@ export default function Home() {
             {isDark ? "☀️" : "🌙"}
           </button>
         </nav>
+
+        {/* ⚡ AVISO DE INICIALIZAÇÃO / CRONÔMETRO (DEV & PROD) */}
+        {isServidorAcordando && (
+          <div
+            style={{
+              backgroundColor: isDark ? "#2a2111" : "#fff3cd",
+              color: isDark ? "#ffe8a1" : "#856404",
+              border: `1px solid ${isDark ? "#664d03" : "#ffeeba"}`,
+              borderRadius: "8px",
+              padding: "16px 20px",
+              margin: "10px auto 20px",
+              maxWidth: "750px",
+              textAlign: "center",
+              boxShadow: "0 4px 10px rgba(0,0,0,0.15)",
+            }}
+          >
+            <div style={{ fontWeight: "bold", fontSize: "1.1em", marginBottom: "6px" }}>
+              ⚡ Servidor Backend em Inicialização
+            </div>
+            <p style={{ margin: "4px 0", fontSize: "0.95em", lineHeight: "1.4" }}>
+              O backend (Java 25 + Spring Boot) está inicializando ou desconectado.
+            </p>
+            <div style={{ margin: "10px 0", fontSize: "1.1em", fontWeight: "bold" }}>
+              Tentativa #{tentativa} • Reconectando automaticamente em:{" "}
+              <span style={{ fontSize: "1.3em", color: isDark ? "#f59e0b" : "#d97706" }}>
+                {tempoRestante.toString().padStart(2, "0")}s
+              </span>
+            </div>
+            <button
+              onClick={() => setTentativa((prev) => prev + 1)}
+              style={{
+                backgroundColor: isDark ? "#f59e0b" : "#d97706",
+                color: "#ffffff",
+                border: "none",
+                borderRadius: "6px",
+                padding: "8px 18px",
+                cursor: "pointer",
+                fontWeight: "bold",
+                fontSize: "0.9em",
+                marginTop: "4px",
+                transition: "opacity 0.2s",
+              }}
+            >
+              🔄 Tentar Reconectar Agora
+            </button>
+          </div>
+        )}
 
         <div
           className="hero-content"
@@ -211,8 +275,7 @@ export default function Home() {
         </div>
       </section>
 
-
-            {/* SEÇÃO PROJETOS */}
+      {/* SEÇÃO PROJETOS */}
       <section id="projetos" className="section">
         <h2>Meus Projetos</h2>
         <div
@@ -229,9 +292,8 @@ export default function Home() {
           {dadosAPI && dadosAPI.projetos ? (
             dadosAPI.projetos.map((projeto) => (
               <div key={projeto.nome} className="project-card">
-                {/* Lógica para definir a imagem com base no nome do projeto */}
                 <GithubImage
-                  src={projeto.imagem ? projeto.imagem : "/img/epic_logo.jpg"} // Lê a imagem vinda da API
+                  src={projeto.imagem ? projeto.imagem : "/img/epic_logo.jpg"}
                   alt={projeto.nome}
                   width={200}
                   height={200}
@@ -242,7 +304,6 @@ export default function Home() {
                   <h3>{projeto.nome}</h3>
                   <p>{projeto.descricao}</p>
 
-                  {/* SUB-LOOP DINÂMICO: Lista de tecnologias do projeto */}
                   <div className="project-technologies">
                     {projeto.tecnologias && projeto.tecnologias.map((tech) => (
                       <span key={tech}>{tech}</span>
@@ -313,8 +374,9 @@ export default function Home() {
           }}
         >
           <a
-            href={`https://google.com{dadosAPI ? dadosAPI.email : "waarapardo@gmail.com"}`}
+            href={`mailto:${dadosAPI ? dadosAPI.email : "waarapardo@gmail.com"}`}
             target="_blank"
+            rel="noopener noreferrer"
             className="btn-link"
           >
             Enviar Email (via Gmail)
@@ -322,6 +384,7 @@ export default function Home() {
           <a
             href={dadosAPI && dadosAPI.redesSociais ? dadosAPI.redesSociais.linkedin : "https://linkedin.com"}
             target="_blank"
+            rel="noopener noreferrer"
             className="btn-link"
           >
             LinkedIn
@@ -329,6 +392,7 @@ export default function Home() {
           <a
             href={dadosAPI && dadosAPI.redesSociais ? dadosAPI.redesSociais.github : "https://github.com"}
             target="_blank"
+            rel="noopener noreferrer"
             className="btn-link"
           >
             GitHub
@@ -368,7 +432,7 @@ export default function Home() {
             </p>
             <div style={{ marginTop: "5px" }}>
               <a
-                href={`${API_BASE_URL}/perfil`} // Dinâmico: vai para o Render em produção
+                href={`${API_BASE_URL}/perfil`}
                 target="_blank"
                 rel="noopener noreferrer"
                 style={{ color: "#4dabf7", margin: "0 10px" }}
@@ -376,7 +440,7 @@ export default function Home() {
                 🔗 Ver API (JSON)
               </a>
               <a
-                href={`${API_BASE_URL}/health`} // Dinâmico: vai para o Render em produção
+                href={`${API_BASE_URL}/health`}
                 target="_blank"
                 rel="noopener noreferrer"
                 style={{ color: "#4dabf7", margin: "0 10px" }}
